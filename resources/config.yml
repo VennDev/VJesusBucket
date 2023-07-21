@@ -1,0 +1,10 @@
+---
+
+# Name bucket for each type
+water: "§r§l§bJesus Water Bucket"
+lava: "§r§l§cJesus Lava Bucket"
+
+# Length of the jesus
+length: 50
+
+...
