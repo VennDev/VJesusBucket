@@ -143,8 +143,8 @@ final class DataManager
 								$blockJesus
 							);
 
-							$viewers = $world->getViewersForPosition($location->asVector3());
-							$world->addSound($location->asVector3(), new BucketFillLavaSound(), $viewers);
+							$viewers = $world->getViewersForPosition($nextVector);
+							$world->addSound($nextVector, new BucketFillLavaSound(), $viewers);
 
 							$resolve(true);
 						}
