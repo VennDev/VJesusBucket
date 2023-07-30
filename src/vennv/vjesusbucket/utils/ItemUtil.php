@@ -18,19 +18,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace vennv\vjesusbucket\utils;
 
 use pocketmine\item\Item;
 use pocketmine\item\StringToItemParser;
 
-final class ItemUtil
-{
+final class ItemUtil {
 
-	public static function getItem(string $item): Item
-	{
-		return StringToItemParser::getInstance()->parse($item);
-	}
+    public static function getItem(string $item) : Item {
+        return StringToItemParser::getInstance()->parse($item);
+    }
 
 }

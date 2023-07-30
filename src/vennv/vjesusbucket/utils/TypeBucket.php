@@ -18,15 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace vennv\vjesusbucket\utils;
 
-final class TypeBucket
-{
+final class TypeBucket {
 
     public const WATER = "water";
 
-	public const LAVA = "lava";
+    public const LAVA = "lava";
 
 }

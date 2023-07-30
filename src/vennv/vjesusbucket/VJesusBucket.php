@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace vennv\vjesusbucket;
 
@@ -31,96 +31,69 @@ use vennv\vjesusbucket\listener\EventListener;
 use vennv\vapm\VapmPMMP;
 use vennv\vjesusbucket\utils\TypeBucket;
 
-class VJesusBucket extends PluginBase implements Listener
-{
+class VJesusBucket extends PluginBase implements Listener {
 
     private static ?VJesusBucket $instance = null;
 
-    public static function getInstance(): VJesusBucket
-	{
+    public static function getInstance() : VJesusBucket {
         return self::$instance;
     }
 
-	protected function onLoad(): void
-	{
+    protected function onLoad() : void {
         self::$instance = $this;
     }
 
-    protected function onEnable(): void
-	{
-		VapmPMMP::init($this);
+    protected function onEnable() : void {
+        VapmPMMP::init($this);
 
         $this->saveDefaultConfig();
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
     }
 
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
-	{
-		if ($command->getName() == "vjesusbucket")
-		{
-			if (isset($args[0]))
-			{
-				if ($args[0] == "give")
-				{
-					if (!isset($args[1]))
-					{
-						return false;
-					}
-					else
-					{
-						if (!isset($args[2]) || !isset($args[3]))
-						{
-							return false;
-						}
-						else
-						{
-							if (!is_numeric($args[3]))
-							{
-								$sender->sendMessage("Amount must be a number");
-								return true;
-							}
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool {
+        if ($command->getName() == "vjesusbucket") {
+            if (isset($args[0])) {
+                if ($args[0] == "give") {
+                    if (!isset($args[1])) {
+                        return false;
+                    } else {
+                        if (!isset($args[2]) || !isset($args[3])) {
+                            return false;
+                        } else {
+                            if (!is_numeric($args[3])) {
+                                $sender->sendMessage("Amount must be a number");
+                                return true;
+                            }
 
-							$player = $sender->getServer()->getPlayerExact($args[1]);
-							if ($player == null)
-							{
-								$sender->sendMessage("Player not found");
-								return true;
-							}
-							else
-							{
-								$type = $args[2];
+                            $player = $sender->getServer()->getPlayerExact($args[1]);
+                            if ($player == null) {
+                                $sender->sendMessage("Player not found");
+                                return true;
+                            } else {
+                                $type = $args[2];
 
-								if ($type == "water")
-								{
-									$type = TypeBucket::WATER;
-								}
-								else if ($type == "lava")
-								{
-									$type = TypeBucket::LAVA;
-								}
-								else
-								{
-									$sender->sendMessage("Types: water, lava");
-									return false;
-								}
+                                if ($type == "water") {
+                                    $type = TypeBucket::WATER;
+                                } else if ($type == "lava") {
+                                    $type = TypeBucket::LAVA;
+                                } else {
+                                    $sender->sendMessage("Types: water, lava");
+                                    return false;
+                                }
 
-								DataManager::giveVJesusBucket($player, $type, (int) $args[3]);
-							}
-						}
-					}
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
+                                DataManager::giveVJesusBucket($player, $type, (int)$args[3]);
+                            }
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

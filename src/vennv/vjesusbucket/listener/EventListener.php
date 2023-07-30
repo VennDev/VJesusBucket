@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace vennv\vjesusbucket\listener;
 
@@ -29,27 +29,23 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use vennv\vjesusbucket\data\DataManager;
 
-final class EventListener implements Listener
-{
+final class EventListener implements Listener {
 
-	/**
-	 * @throws Throwable
-	 */
-	public function onPlayerInteract(PlayerInteractEvent $event): void
-	{
+    /**
+     * @throws Throwable
+     */
+    public function onPlayerInteract(PlayerInteractEvent $event) : void {
         DataManager::onJesus($event);
     }
 
-	public function onPlayerItemUse(PlayerItemUseEvent $event): void
-	{
-		$player = $event->getPlayer();
-		$item = $event->getItem();
+    public function onPlayerItemUse(PlayerItemUseEvent $event) : void {
+        $player = $event->getPlayer();
+        $item = $event->getItem();
 
-		if (DataManager::isPremiumItem($item))
-		{
-			$player->getInventory()->remove(VanillaItems::BUCKET());
-			$event->cancel();
-		}
-	}
+        if (DataManager::isPremiumItem($item)) {
+            $player->getInventory()->remove(VanillaItems::BUCKET());
+            $event->cancel();
+        }
+    }
 
 }

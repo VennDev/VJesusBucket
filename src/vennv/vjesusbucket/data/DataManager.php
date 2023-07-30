@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace vennv\vjesusbucket\data;
 
@@ -37,130 +37,112 @@ use vennv\vjesusbucket\utils\MathUtil;
 use vennv\vjesusbucket\utils\TypeBucket;
 use vennv\vjesusbucket\VJesusBucket;
 
-final class DataManager
-{
+final class DataManager {
 
-    public static function getConfig(): Config
-	{
+    public static function getConfig() : Config {
         return VJesusBucket::getInstance()->getConfig();
     }
 
-	public static function isPremiumItem(Item $item): bool
-	{
-		$namedTag = $item->getNamedTag();
+    public static function isPremiumItem(Item $item) : bool {
+        $namedTag = $item->getNamedTag();
 
-		return $namedTag->getTag("vjesusbucket") !== null &&
-			$namedTag->getTag("vtype_bucket") !== null;
-	}
+        return $namedTag->getTag("vjesusbucket") !== null &&
+            $namedTag->getTag("vtype_bucket") !== null;
+    }
 
-	public static function giveVJesusBucket(Player $player, string $type, int $count): bool
-	{
-		$item = self::getVJesusBucket($type);
+    public static function giveVJesusBucket(Player $player, string $type, int $count) : bool {
+        $item = self::getVJesusBucket($type);
 
-		if ($item !== null)
-		{
-			for ($i = 0; $i < $count; $i++)
-			{
-				$player->getInventory()->addItem($item);
-			}
+        if ($item !== null) {
+            for ($i = 0; $i < $count; $i++) {
+                $player->getInventory()->addItem($item);
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public static function getVJesusBucket(string $type): ?Item
-	{
-		$item = match ($type) {
-			TypeBucket::WATER => ItemUtil::getItem("water_bucket"),
-			TypeBucket::LAVA => ItemUtil::getItem("lava_bucket"),
-			default => null,
-		};
+    public static function getVJesusBucket(string $type) : ?Item {
+        $item = match ($type) {
+            TypeBucket::WATER => ItemUtil::getItem("water_bucket"),
+            TypeBucket::LAVA => ItemUtil::getItem("lava_bucket"),
+            default => null,
+        };
 
-		if ($item !== null)
-		{
-			$name = self::getConfig()->get($type);
-			$item->setCustomName($name);
+        if ($item !== null) {
+            $name = self::getConfig()->get($type);
+            $item->setCustomName($name);
 
-			$item = $item->setNamedTag($item->getNamedTag()->setString("vjesusbucket", "true"));
-			$item = $item->setNamedTag($item->getNamedTag()->setString("vtype_bucket", $type));
-		}
+            $item = $item->setNamedTag($item->getNamedTag()->setString("vjesusbucket", "true"));
+            $item = $item->setNamedTag($item->getNamedTag()->setString("vtype_bucket", $type));
+        }
 
-		return $item;
-	}
+        return $item;
+    }
 
-	/**
-	 * @throws Throwable
-	 */
-	public static function onJesus(PlayerInteractEvent $event): void
-	{
-		$player = $event->getPlayer();
-		$block = $event->getBlock();
+    /**
+     * @throws Throwable
+     */
+    public static function onJesus(PlayerInteractEvent $event) : void {
+        $player = $event->getPlayer();
+        $block = $event->getBlock();
 
-		$world = $player->getWorld();
-		$location = clone $player->getLocation();
-		$positionBlock = $block->getPosition();
-		$inventory = $player->getInventory();
+        $world = $player->getWorld();
+        $location = clone $player->getLocation();
+        $positionBlock = $block->getPosition();
+        $inventory = $player->getInventory();
 
-		$positionBlock = $world->getBlock($positionBlock->asVector3()->add(0, 1, 0))->getPosition();
+        $positionBlock = $world->getBlock($positionBlock->asVector3()->add(0, 1, 0))->getPosition();
 
-		$itemHand = $inventory->getItemInHand();
+        $itemHand = $inventory->getItemInHand();
 
-		if (self::isPremiumItem($itemHand))
-		{
-			$typeBucket = $itemHand->getNamedTag()->getString("vtype_bucket");
+        if (self::isPremiumItem($itemHand)) {
+            $typeBucket = $itemHand->getNamedTag()->getString("vtype_bucket");
 
-			$blockJesus = match ($typeBucket)
-			{
-				TypeBucket::WATER => VanillaBlocks::WATER(),
-				TypeBucket::LAVA => VanillaBlocks::LAVA(),
-				default => VanillaBlocks::AIR(),
-			};
+            $blockJesus = match ($typeBucket) {
+                TypeBucket::WATER => VanillaBlocks::WATER(),
+                TypeBucket::LAVA => VanillaBlocks::LAVA(),
+                default => VanillaBlocks::AIR(),
+            };
 
-			new Async(function() use (
-				$world, $location, $positionBlock, $blockJesus
-			): void
-			{
-				for ($i = 1; $i < self::getConfig()->get("length"); $i++)
-				{
-					$promise = Async::await(new Promise(function($resolve, $reject) use (
-						$world, $location, $positionBlock, $blockJesus, $i
-					): void
-					{
-						$nextVector = MathUtil::getNextBlockByInteract($location, $positionBlock->asVector3(), $i);
+            new Async(function () use (
+                $world, $location, $positionBlock, $blockJesus
+            ) : void {
+                for ($i = 1; $i < self::getConfig()->get("length"); $i++) {
+                    $promise = Async::await(new Promise(function ($resolve, $reject) use (
+                        $world, $location, $positionBlock, $blockJesus, $i
+                    ) : void {
+                        $nextVector = MathUtil::getNextBlockByInteract($location, $positionBlock->asVector3(), $i);
 
-						$blockHere = $world->getBlock($nextVector);
-						$blockDownHere = $world->getBlock($nextVector->subtract(0, 1, 0));
+                        $blockHere = $world->getBlock($nextVector);
+                        $blockDownHere = $world->getBlock($nextVector->subtract(0, 1, 0));
 
-						if (
-							($blockHere instanceof Air || $blockHere instanceof $blockJesus) &&
-							!$blockDownHere instanceof Air
-						)
-						{
-							$world->setBlock(
-								$nextVector,
-								$blockJesus
-							);
+                        if (
+                            ($blockHere instanceof Air || $blockHere instanceof $blockJesus) &&
+                            !$blockDownHere instanceof Air
+                        ) {
+                            $world->setBlock(
+                                $nextVector,
+                                $blockJesus
+                            );
 
-							$viewers = $world->getViewersForPosition($nextVector);
-							$world->addSound($nextVector, new BucketFillLavaSound(), $viewers);
+                            $viewers = $world->getViewersForPosition($nextVector);
+                            $world->addSound($nextVector, new BucketFillLavaSound(), $viewers);
 
-							$resolve(true);
-						}
-						else
-						{
-							$reject(false);
-						}
-					}));
+                            $resolve(true);
+                        } else {
+                            $reject(false);
+                        }
+                    }));
 
-					if ($promise === false)
-					{
-						break;
-					}
-				}
-			});
-		}
+                    if ($promise === false) {
+                        break;
+                    }
+                }
+            });
+        }
     }
 
 }
