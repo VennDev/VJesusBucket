@@ -14,7 +14,7 @@
 ```
 
 # Video
-https://github.com/VennDev/VJesusBucket/assets/111500380/f2979e3f-09e9-4470-8d13-2b0e0b60fe9e
+[Click To Watch](https://github.com/VennDev/VJesusBucket/assets/111500380/f2979e3f-09e9-4470-8d13-2b0e0b60fe9e)
 
 # Credits
 - Email: pnam5005@gmail.com
